@@ -1,8 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var front = 0;
-var pardir;
-var currdir=__dirname;
+var currdir;
 var dir;
 var queue = [];
 var total = 0;
@@ -26,7 +25,6 @@ function proc(){
     }
   }
   else {
-    if(p !== __filename){
     contents = fs.readFileSync(p,'utf-8');
     var count = 0;
     for(i in contents){
@@ -42,7 +40,6 @@ function proc(){
     }
     total+=count;
     }
-  }
 }
 
 function main(){
@@ -50,14 +47,16 @@ function main(){
   dir = fs.readdirSync(__dirname);
   console.log('\n');
   for(i in dir){
-    enqueue({name:dir[i],path:currdir});
+    if(path.join(__dirname,dir[i]) !== __filename && (dir[i] !== '.git')){
+      enqueue({name:dir[i],path:currdir});
+    }
   }
   while (queue.length > front) {
     proc();
   }
   console.log("\nTotal lines: "+total+"\n");
 }
-main();
 
+main();
 
 //with love - Ritik Saxena//
